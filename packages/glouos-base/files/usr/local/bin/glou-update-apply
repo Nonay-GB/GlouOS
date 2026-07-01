@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+if [[ $EUID -ne 0 ]]; then
+    echo "glou-update-apply must run as root (it is normally launched via pkexec)."
+    exit 1
+fi
+
+echo "==> GlouOS system update"
+
+if command -v snapper >/dev/null 2>&1; then
+    echo "--> Taking a pre-update snapshot (snapper)..."
+    snapper -c root create -d "Before GlouOS update $(date +%F_%H%M)" 2>/dev/null \
+        || echo "    (snapshot skipped)"
+fi
+
+echo "--> Refreshing package signing keys..."
+pacman -Sy --needed --noconfirm archlinux-keyring || true
+
+BEFORE="$(pacman -Q linux-zen nvidia-dkms 2>/dev/null | sort || true)"
+
+echo "--> Upgrading all packages..."
+pacman -Syu --noconfirm
+RC=$?
+
+AFTER="$(pacman -Q linux-zen nvidia-dkms 2>/dev/null | sort || true)"
+
+if command -v flatpak >/dev/null 2>&1; then
+    echo "--> Updating Flatpak apps..."
+    flatpak update -y --noninteractive || true
+fi
+
+if [[ "$BEFORE" != "$AFTER" ]]; then
+    RUNTIME_DIR="/run/user/${PKEXEC_UID:-0}"
+    touch "${RUNTIME_DIR}/glou-reboot-needed" 2>/dev/null \
+        || touch /tmp/glou-reboot-needed 2>/dev/null || true
+fi
+
+if [[ $RC -eq 0 ]]; then
+    echo "==> Update complete."
+else
+    echo "==> Update finished with errors (exit ${RC}). See messages above."
+fi
+exit $RC

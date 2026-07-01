@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+REPO="Nonay-GB/GlouOS"
+PROG="glouos"
+
+usage() {
+    echo "GlouOS system tool"
+    echo "  usage: sudo ${PROG} update [version]"
+    echo "    update            update GlouOS to the latest release"
+    echo "    update <version>  update to a specific GlouOS release (e.g. 1.2)"
+}
+
+current_version() {
+    cat /usr/share/glouos/VERSION 2>/dev/null || { . /etc/os-release 2>/dev/null; echo "${VERSION_ID:-0}"; }
+}
+
+release_json() {
+    local v="${1:-}"
+    if [[ -n "$v" ]]; then
+        v="${v#v}"
+        curl -fsSL --max-time 30 "https://api.github.com/repos/${REPO}/releases/tags/v${v}" 2>/dev/null && return 0
+        curl -fsSL --max-time 30 "https://api.github.com/repos/${REPO}/releases/tags/${v}" 2>/dev/null
+    else
+        curl -fsSL --max-time 30 "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null
+    fi
+}
+
+case "${1:-}" in
+  update)
+    if [[ $EUID -ne 0 ]]; then
+        echo "This must be run as root:  sudo ${PROG} update ${2:-}" >&2
+        exit 1
+    fi
+    version="${2:-}"
+    echo "Current GlouOS version: $(current_version)"
+    echo "Checking github.com/${REPO} ..."
+    json="$(release_json "$version")"
+    if [[ -z "$json" ]]; then
+        echo "No matching GlouOS release was found on GitHub." >&2
+        exit 1
+    fi
+    tag="$(printf '%s' "$json" | grep -m1 '"tag_name"' | sed -E 's/.*"tag_name" *: *"v?([^"]+)".*/\1/')"
+    pkg_url="$(printf '%s' "$json" | grep -oE 'https://[^"]*glouos-base[^"]*\.pkg\.tar\.zst' | head -1)"
+
+    echo "Updating system packages ..."
+    pacman -Syu --noconfirm
+
+    if [[ -n "$pkg_url" ]]; then
+        echo "Installing GlouOS ${tag} core (glouos-base) ..."
+        tmp="$(mktemp -d)"
+        pkg="${tmp}/$(basename "$pkg_url")"
+        curl -fL --max-time 300 -o "$pkg" "$pkg_url"
+        curl -fsL --max-time 60 -o "${pkg}.sig" "${pkg_url}.sig" 2>/dev/null || true
+        if [[ -f "${pkg}.sig" ]]; then
+            pacman -U --noconfirm "$pkg"
+        else
+            conf="${tmp}/pacman.conf"
+            sed 's/^SigLevel.*/SigLevel = Never/' /etc/pacman.conf > "$conf"
+            pacman --config "$conf" -U --noconfirm "$pkg"
+        fi
+        rm -rf "$tmp"
+    else
+        echo "Release ${tag} has no glouos-base package attached; updated system packages only."
+    fi
+    echo "GlouOS is now up to date (${tag:-latest})."
+    ;;
+  ""|-h|--help|help)
+    usage
+    ;;
+  *)
+    echo "Unknown command: $1" >&2
+    usage
+    exit 1
+    ;;
+esac

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Run with Compatibility Layer (Wine)
+GenericName=Compatibility App
+Comment=Open .exe and .msi programs on GlouOS
+Exec=glou-run-exe %f
+Icon=wine
+Terminal=false
+NoDisplay=true
+MimeType=application/x-ms-dos-executable;application/x-msdownload;application/vnd.microsoft.portable-executable;application/x-msi;application/x-ms-installer;
+Categories=System;Utility;

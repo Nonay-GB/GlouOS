@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="180" viewBox="0 0 560 180">
+  <g transform="translate(14,24) scale(0.52)">
+    <polygon points="128,36.8 202.82,80 128,123.2 53.18,80" fill="#4ade60"/>
+    <polygon points="206.98,87.2 206.98,173.6 132.16,216.8 132.16,130.4" fill="#16a34a"/>
+    <polygon points="49.02,87.2 123.84,130.4 123.84,216.8 49.02,173.6" fill="#15803d"/>
+  </g>
+  <text x="168" y="112" font-family="'Inter','Noto Sans','DejaVu Sans',sans-serif"
+        font-size="76" font-weight="700" letter-spacing="-1" fill="#0f1a12">GlouOS</text>
+</svg>

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=GlouOS Updates
+GenericName=Software Updates
+Comment=Check for and install GlouOS updates
+Exec=glou-update
+Icon=system-software-update
+Terminal=false
+Categories=System;Settings;
+Keywords=update;updates;upgrade;software;system;patch;

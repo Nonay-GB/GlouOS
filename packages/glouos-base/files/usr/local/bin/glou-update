@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+DIALOG="$(command -v kdialog || true)"
+[[ -z "$DIALOG" ]] && { echo "kdialog not found"; exit 1; }
+
+LIST="$(checkupdates 2>/dev/null || true)"
+COUNT="$(printf '%s\n' "$LIST" | grep -c . || true)"
+
+if [[ "${COUNT:-0}" -eq 0 ]]; then
+    "$DIALOG" --title "GlouOS Updates" --icon system-software-update \
+        --msgbox "Your system is up to date."
+    exit 0
+fi
+
+if ! "$DIALOG" --title "GlouOS Updates" --icon system-software-update \
+        --yesno "There are ${COUNT} update(s) available:\n\n${LIST}\n\nInstall them now?"; then
+    exit 0
+fi
+
+konsole --title "GlouOS Updates - installing" -e \
+    bash -c "pkexec /usr/local/bin/glou-update-apply; echo; read -rp 'Done. Press Enter to close...'"
+
+FLAG="${XDG_RUNTIME_DIR:-/tmp}/glou-reboot-needed"
+if [[ -f "$FLAG" ]]; then
+    rm -f "$FLAG"
+    if "$DIALOG" --title "GlouOS Updates" --icon system-software-update \
+            --yesno "A core component (kernel or graphics driver) was updated.\n\nRestart now to finish?"; then
+        systemctl reboot
+    fi
+fi

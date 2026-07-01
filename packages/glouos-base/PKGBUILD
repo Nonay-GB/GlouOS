@@ -1,0 +1,42 @@
+pkgname=glouos-base
+pkgver=0.1
+pkgrel=1
+pkgdesc="GlouOS core: tools, boot splash, installer branding and desktop defaults"
+arch=('any')
+url="https://glouos.example"
+license=('GPL3')
+depends=(
+    'plasma-desktop'
+    'kdeplasma-addons'
+    'sddm'
+    'konsole'
+    'kdialog'
+    'plymouth'
+    'sbctl'
+    'pacman-contrib'
+    'libnotify'
+    'polkit'
+    'wine'
+    'flatpak'
+    'kcmutils'
+    'curl'
+)
+backup=(
+    'etc/skel/.config/kdeglobals'
+    'etc/skel/.config/kwinrc'
+    'etc/skel/.config/mimeapps.list'
+)
+install="$pkgname.install"
+
+package() {
+    cp -a "$startdir/files/." "$pkgdir/"
+
+    install -d "$pkgdir/usr/share/glouos"
+    echo "$pkgver" > "$pkgdir/usr/share/glouos/VERSION"
+
+    chmod 0755 "$pkgdir"/usr/local/bin/glou*
+
+    install -d "$pkgdir/etc/skel/.config/systemd/user/timers.target.wants"
+    ln -sf ../glouos-live-update-service.timer \
+        "$pkgdir/etc/skel/.config/systemd/user/timers.target.wants/glouos-live-update-service.timer"
+}

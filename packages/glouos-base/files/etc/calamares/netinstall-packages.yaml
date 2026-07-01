@@ -1,0 +1,48 @@
+- name: "Games & launchers"
+  description: "Stores and tools to play your games"
+  selected: true
+  hidden: false
+  packages: []
+  subgroups:
+    - name: "Steam"
+      description: "Valve's game store and launcher"
+      selected: true
+      packages:
+        - steam
+    - name: "Lutris"
+      description: "Manage games from many stores"
+      selected: true
+      packages:
+        - lutris
+
+- name: "Communication"
+  description: "Chat and voice"
+  selected: true
+  packages: []
+  subgroups:
+    - name: "Discord"
+      description: "Voice and text chat"
+      selected: true
+      packages:
+        - discord
+
+- name: "Media & web"
+  description: "Everyday apps"
+  selected: false
+  packages: []
+  subgroups:
+    - name: "Spotify"
+      description: "Music streaming"
+      selected: false
+      packages:
+        - spotify-launcher
+    - name: "OBS Studio"
+      description: "Record and stream gameplay"
+      selected: false
+      packages:
+        - obs-studio
+    - name: "VLC"
+      description: "Play any video or audio file"
+      selected: false
+      packages:
+        - vlc

@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+if [[ $EUID -ne 0 ]]; then
+    echo "glou-secureboot-apply must run as root (normally launched via pkexec)."
+    exit 1
+fi
+
+echo "==> Current Secure Boot status:"
+sbctl status || true
+
+echo
+echo "==> Creating GlouOS Secure Boot keys..."
+sbctl create-keys
+
+echo
+echo "==> Enrolling keys (keeping Microsoft keys, so option ROMs still load)..."
+sbctl enroll-keys --microsoft || sbctl enroll-keys -m || sbctl enroll-keys
+
+echo
+echo "==> Signing the kernel and bootloader..."
+for f in \
+    /boot/vmlinuz-linux-zen \
+    /efi/EFI/*/grubx64.efi \
+    /boot/EFI/*/grubx64.efi \
+    /efi/EFI/systemd/systemd-bootx64.efi \
+    /boot/EFI/systemd/systemd-bootx64.efi
+do
+    if [[ -f "$f" ]]; then
+        echo "  signing $f"
+        sbctl sign -s "$f" || true
+    fi
+done
+sbctl sign-all || true
+
+echo
+echo "==> Verifying signatures:"
+sbctl verify || true
+
+echo
+echo "==> Done. Now enable Secure Boot in your firmware settings, then reboot."

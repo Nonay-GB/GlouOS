@@ -1,0 +1,17 @@
+#!/bin/bash
+set -u
+root="${1:?target root path required}"
+
+for k in \
+    /run/archiso/bootmnt/arch/boot/x86_64/vmlinuz-linux-zen \
+    /run/archiso/copytoram/vmlinuz-linux-zen \
+    /run/archiso/airootfs/boot/vmlinuz-linux-zen; do
+    if [ -f "$k" ]; then
+        install -Dm644 "$k" "$root/boot/vmlinuz-linux-zen"
+        echo "GlouOS: copied kernel from $k"
+        exit 0
+    fi
+done
+
+echo "GlouOS: linux-zen kernel not found on live medium" >&2
+exit 1

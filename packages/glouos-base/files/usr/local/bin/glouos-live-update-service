@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+REPO="Nonay-GB/GlouOS"
+API="https://api.github.com/repos/${REPO}/releases/latest"
+CACHE="${XDG_RUNTIME_DIR:-/tmp}/glouos-update.version"
+
+LOCAL="$(cat /usr/share/glouos/VERSION 2>/dev/null || { . /etc/os-release 2>/dev/null; echo "${VERSION_ID:-0}"; })"
+
+REMOTE="$(curl -fsSL --max-time 20 "$API" 2>/dev/null \
+    | grep -m1 '"tag_name"' \
+    | sed -E 's/.*"tag_name" *: *"v?([^"]+)".*/\1/')"
+
+[[ -z "$REMOTE" ]] && exit 0
+echo "$REMOTE" > "$CACHE" 2>/dev/null || true
+
+newest="$(printf '%s\n%s\n' "$LOCAL" "$REMOTE" | sort -V | tail -n1)"
+if [[ "$REMOTE" != "$LOCAL" && "$newest" == "$REMOTE" ]]; then
+    notify-send \
+        --app-name="GlouOS Updates" \
+        --icon=system-software-update \
+        "GlouOS ${REMOTE} is available" \
+        "You're on ${LOCAL}. Run 'sudo glouos update' to install it."
+fi

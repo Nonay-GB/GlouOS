@@ -1,0 +1,16 @@
+#!/bin/bash
+set -u
+
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/0}"
+[ -d "$XDG_RUNTIME_DIR" ] || { mkdir -p "$XDG_RUNTIME_DIR"; chmod 700 "$XDG_RUNTIME_DIR"; }
+
+plymouth quit --retain-splash 2>/dev/null || true
+
+export WLR_RENDERER=pixman
+export WLR_NO_HARDWARE_CURSORS=1
+export QT_QPA_PLATFORM=wayland
+
+while true; do
+    cage -- calamares || true
+    sleep 1
+done

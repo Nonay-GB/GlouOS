@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=GlouOS
+Description=Light, minimal GlouOS boot splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/glouos
+ScriptFile=/usr/share/plymouth/themes/glouos/glouos.script

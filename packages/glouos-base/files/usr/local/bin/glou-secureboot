@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+DIALOG="$(command -v kdialog || true)"
+[[ -z "$DIALOG" ]] && { echo "kdialog not found"; exit 1; }
+TITLE="GlouOS Secure Boot Setup"
+
+if ! command -v sbctl >/dev/null 2>&1; then
+    "$DIALOG" --title "$TITLE" --icon security-high \
+        --error "sbctl is not installed, so Secure Boot setup is unavailable."
+    exit 1
+fi
+
+"$DIALOG" --title "$TITLE" --icon security-high --yesno \
+"Secure Boot makes your PC refuse to start anything that isn't signed by GlouOS,
+blocking tampered or fake boot files before the system loads.
+
+This wizard will:
+  1. Create GlouOS Secure Boot keys
+  2. Enroll them into your firmware
+  3. Sign the GlouOS bootloader and kernel
+
+Before you continue, open your firmware (BIOS) settings and put Secure Boot into
+'Setup Mode' (clear or erase the existing keys).
+
+Begin now?" || exit 0
+
+konsole --title "$TITLE - working" -e \
+    bash -c "pkexec /usr/local/bin/glou-secureboot-apply; echo; read -rp 'Press Enter to close...'"
+
+if "$DIALOG" --title "$TITLE" --icon security-high --yesno \
+"If signing succeeded, the last step is to turn Secure Boot ON in your firmware
+settings, then start GlouOS normally.
+
+Restart into firmware settings now?"; then
+    systemctl reboot --firmware-setup 2>/dev/null || systemctl reboot
+fi

@@ -1,0 +1,12 @@
+[KDE Action Restrictions][$i]
+ghns=false
+
+[KDE][$i]
+LookAndFeelPackage=org.kde.breeze.desktop
+
+[General][$i]
+ColorScheme=BreezeLight
+widgetStyle=Breeze
+
+[Icons][$i]
+Theme=breeze

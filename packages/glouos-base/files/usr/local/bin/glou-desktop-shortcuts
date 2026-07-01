@@ -1,0 +1,18 @@
+#!/bin/bash
+set -u
+
+apps="steam net.lutris.Lutris lutris discord spotify spotify-launcher com.obsproject.Studio obs vlc"
+
+for home in /home/*; do
+    [ -d "$home" ] || continue
+    user="$(basename "$home")"
+    dest="$home/Desktop"
+    mkdir -p "$dest"
+    for a in $apps; do
+        src="/usr/share/applications/$a.desktop"
+        [ -f "$src" ] || continue
+        cp -f "$src" "$dest/$a.desktop"
+        chmod 0755 "$dest/$a.desktop"
+    done
+    chown -R "$user:$user" "$dest" 2>/dev/null || true
+done

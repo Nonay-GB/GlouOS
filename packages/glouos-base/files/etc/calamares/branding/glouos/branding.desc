@@ -1,0 +1,38 @@
+---
+componentName: glouos
+
+welcomeStyleCalamares: false
+welcomeExpandingLogo:  false
+windowExpanding:       normal
+windowSize:            46em,30em
+windowPlacement:       center
+
+sidebar:    qml,top
+navigation: qml,bottom
+
+strings:
+    productName:         GlouOS
+    shortProductName:    GlouOS
+    version:             rolling
+    shortVersion:        Rolling
+    versionedName:       GlouOS
+    shortVersionedName:  GlouOS
+    bootloaderEntryName:  GlouOS
+    productUrl:          https://glouos.example
+    productWelcome:      Welcome to the GlouOS installer.
+
+images:
+    productLogo:    logo.svg
+    productIcon:    mark.svg
+    productWelcome: welcome.svg
+
+slideshow: show.qml
+slideshowAPI: 2
+
+style:
+    sidebarBackground:    "#ffffff"
+    sidebarText:          "#9097a1"
+    sidebarTextSelect:    "#0067c0"
+    sidebarTextHighlight: "#0067c0"
+
+stylesheet: stylesheet.qss

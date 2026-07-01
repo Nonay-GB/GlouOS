@@ -1,0 +1,54 @@
+# GlouOS Plymouth theme - a spinning 3D GlouOS cube above the wordmark. The cube
+# is a pre-rendered frame sequence (cube-0.png .. cube-35.png, one per 10 degrees
+# of rotation); the refresh callback cycles them to animate a smooth spin.
+
+# Soft light background gradient.
+Window.SetBackgroundTopColor(0.96, 0.97, 0.98);
+Window.SetBackgroundBottomColor(0.90, 0.92, 0.95);
+
+screen_width  = Window.GetWidth();
+screen_height = Window.GetHeight();
+
+# Spinning cube: load every rotation frame up front, then flip through them.
+frame_count = 36;
+for (i = 0; i < frame_count; i++) {
+    cube.image[i] = Image("cube-" + i + ".png");
+}
+cube.width  = cube.image[0].GetWidth();
+cube.height = cube.image[0].GetHeight();
+cube.sprite = Sprite(cube.image[0]);
+cube.sprite.SetX(screen_width / 2 - cube.width / 2);
+cube.sprite.SetY(screen_height / 2 - cube.height / 2 - 34);
+
+# Wordmark, just below the cube.
+title.image  = Image.Text("GlouOS", 0.11, 0.12, 0.14, 1, "Sans Bold 40");
+title.sprite = Sprite(title.image);
+title.sprite.SetX(screen_width / 2 - title.image.GetWidth() / 2);
+title.sprite.SetY(screen_height / 2 + cube.height / 2 - 24);
+
+# Animate: advance one frame every few ticks and wrap around.
+tick = 0;
+fun refresh_callback() {
+    tick++;
+    idx = Math.Int(tick / 2);                          # spin speed
+    idx = idx - Math.Int(idx / frame_count) * frame_count;   # wrap (modulo)
+    cube.sprite.SetImage(cube.image[idx]);
+}
+Plymouth.SetRefreshFunction(refresh_callback);
+
+# Password prompt for encrypted disks (kept minimal).
+prompt.sprite = Sprite();
+fun display_password_callback(prompt_text, bullets) {
+    dots = "";
+    for (i = 0; i < bullets; i++) dots += "*";
+    img = Image.Text(prompt_text + "  " + dots, 0.10, 0.11, 0.13, 1, "Sans 16");
+    prompt.sprite.SetImage(img);
+    prompt.sprite.SetX(screen_width / 2 - img.GetWidth() / 2);
+    prompt.sprite.SetY(screen_height * 0.78);
+}
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+
+fun display_normal_callback() {
+    prompt.sprite.SetImage(Image.Text("", 0, 0, 0));
+}
+Plymouth.SetDisplayNormalFunction(display_normal_callback);

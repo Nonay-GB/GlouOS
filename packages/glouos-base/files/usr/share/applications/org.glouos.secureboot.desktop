@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Secure Boot Setup
+GenericName=Secure Boot
+Comment=Turn on verified boot so only signed GlouOS can start
+Exec=glou-secureboot
+Icon=security-high
+Terminal=false
+Categories=System;Settings;Security;
+Keywords=secure;boot;uefi;sign;verify;security;

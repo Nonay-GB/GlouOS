@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Install GlouOS
+Comment=Install GlouOS to your computer
+Exec=pkexec calamares -d
+Icon=/etc/calamares/branding/glouos/logo.svg
+Terminal=false
+Categories=System;

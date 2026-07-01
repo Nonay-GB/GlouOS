@@ -1,0 +1,12 @@
+[SddmGreeterTheme]
+Name=GlouOS
+Description=GlouOS login theme
+Author=GlouOS
+License=GPL-3.0
+Type=sddm-theme
+Version=1.0
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=glouos
+Theme-API=2.0
+QtVersion=6

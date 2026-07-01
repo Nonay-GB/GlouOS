@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+TARGET="${1:-}"
+DIALOG="$(command -v kdialog || true)"
+
+notify() {
+    if [[ -n "$DIALOG" ]]; then "$DIALOG" --title "GlouOS" "$@"; fi
+}
+
+if [[ -z "$TARGET" || ! -f "$TARGET" ]]; then
+    notify --error "No program was selected to run."
+    exit 1
+fi
+
+if ! command -v wine >/dev/null 2>&1; then
+    notify --error "Wine is not installed, so .exe programs cannot run."
+    exit 1
+fi
+
+export WINEPREFIX="${WINEPREFIX:-$HOME/.local/share/glou/wine}"
+export WINEDEBUG="-all"
+export WINEDLLOVERRIDES="mscoree=d;mshtml=d"
+
+if [[ ! -d "$WINEPREFIX" ]]; then
+    if [[ -n "$DIALOG" ]]; then
+        ( wineboot --init >/dev/null 2>&1 ) &
+        WPID=$!
+        ( while kill -0 "$WPID" 2>/dev/null; do echo 50; sleep 1; done; echo 100 ) \
+            | "$DIALOG" --title "GlouOS" --progressbar "Setting up the compatibility layer for the first time..." 100 >/dev/null 2>&1
+        wait "$WPID" 2>/dev/null || true
+    else
+        wineboot --init >/dev/null 2>&1 || true
+    fi
+fi
+
+cd "$(dirname "$TARGET")" || exit 1
+
+case "${TARGET,,}" in
+    *.msi) exec wine msiexec /i "$TARGET" ;;
+    *)     exec wine "$TARGET" ;;
+esac
