@@ -1,0 +1,12 @@
+NAME="GlouOS"
+PRETTY_NAME="GlouOS"
+ID=glouos
+ID_LIKE=arch
+VERSION_ID=0.4
+BUILD_ID=rolling
+ANSI_COLOR="38;2;22;163;74"
+HOME_URL="https://glouos.example"
+DOCUMENTATION_URL="https://glouos.example/docs"
+SUPPORT_URL="https://glouos.example/support"
+BUG_REPORT_URL="https://glouos.example/bugs"
+LOGO=glouos

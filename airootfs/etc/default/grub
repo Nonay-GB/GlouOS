@@ -1,0 +1,11 @@
+# GlouOS - GRUB defaults for the INSTALLED system.
+# 'quiet splash' hands boot over to the Plymouth splash for a clean, branded boot.
+GRUB_DEFAULT=0
+GRUB_TIMEOUT=3
+GRUB_TIMEOUT_STYLE=menu
+GRUB_DISTRIBUTOR="GlouOS"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash loglevel=3 rd.udev.log_level=3 vt.global_cursor_default=0"
+GRUB_CMDLINE_LINUX=""
+GRUB_GFXMODE=auto
+GRUB_GFXPAYLOAD_LINUX=keep
+GRUB_DISABLE_RECOVERY=true
