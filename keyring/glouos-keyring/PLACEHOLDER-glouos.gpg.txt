@@ -1,0 +1,10 @@
+PLACEHOLDER - the real glouos.gpg (the exported public key) does not exist yet.
+
+It is created automatically when you run:
+
+    tools/make-signing-key.sh "GlouOS Package Signing" keys@glouos.example
+
+That writes glouos.gpg and fills in glouos-trusted in this folder. After that,
+build the package with `makepkg -f` and add it to your [glouos] repo. Until the
+key exists, the keyring package cannot be built (by design - there is nothing to
+trust yet). Delete this placeholder once glouos.gpg is generated.

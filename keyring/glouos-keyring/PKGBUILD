@@ -1,0 +1,19 @@
+pkgname=glouos-keyring
+pkgver=2026.06.30
+pkgrel=1
+pkgdesc="GlouOS PGP keyring (trusted package-signing keys)"
+arch=('any')
+url="https://glouos.example"
+license=('GPL3')
+install="$pkgname.install"
+source=('glouos.gpg' 'glouos-trusted' 'glouos-revoked')
+sha256sums=('SKIP' 'SKIP' 'SKIP')
+
+package() {
+    install -Dm644 "$srcdir/glouos.gpg" \
+        "$pkgdir/usr/share/pacman/keyrings/glouos.gpg"
+    install -Dm644 "$srcdir/glouos-trusted" \
+        "$pkgdir/usr/share/pacman/keyrings/glouos-trusted"
+    install -Dm644 "$srcdir/glouos-revoked" \
+        "$pkgdir/usr/share/pacman/keyrings/glouos-revoked"
+}

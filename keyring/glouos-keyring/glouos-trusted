@@ -1,0 +1,5 @@
+# GlouOS trusted keys. Format: <FINGERPRINT>:<ownertrust>:
+# ownertrust 4 = full trust. This file is OVERWRITTEN by tools/make-signing-key.sh
+# with the real fingerprint once you generate the key. Example line:
+#
+# AAAABBBBCCCCDDDDEEEEFFFF0000111122223333:4:

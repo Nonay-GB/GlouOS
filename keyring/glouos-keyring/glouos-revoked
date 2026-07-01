@@ -1,0 +1,2 @@
+# GlouOS revoked keys. One fingerprint per line. Add a key's fingerprint here if
+# it is ever compromised; pacman will then distrust packages signed by it.
