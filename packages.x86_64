@@ -28,6 +28,7 @@ archinstall
 arch-install-scripts
 syslinux
 grub
+os-prober
 efibootmgr
 edk2-shell
 
@@ -67,6 +68,7 @@ kate
 spectacle
 firefox
 cage
+wlr-randr
 
 gamemode
 lib32-gamemode
@@ -77,6 +79,9 @@ wine
 winetricks
 goverlay
 scx-scheds
+scx-tools
+umu-launcher
+protonup-qt
 realtime-privileges
 openrgb
 corectrl
@@ -86,12 +91,12 @@ lib32-vkbasalt
 
 chaotic-keyring
 chaotic-mirrorlist
-steam
-lutris
-protonup-qt
-heroic-games-launcher-bin
-bottles
+alhp-keyring
+alhp-mirrorlist
 gwe
+octopi
+openxr
+pyside6
 
 noto-fonts
 noto-fonts-emoji
@@ -101,6 +106,8 @@ plymouth
 
 zram-generator
 cpupower
+power-profiles-daemon
+switcheroo-control
 pciutils
 openssh
 
