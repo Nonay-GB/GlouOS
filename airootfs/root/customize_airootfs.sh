@@ -23,6 +23,12 @@ echo "root:root" | chpasswd
 
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
 
+# a crashing session retries logins fast; don't let that lock the account
+if [ -f /etc/security/faillock.conf ] && ! grep -q 'GlouOS' /etc/security/faillock.conf; then
+    printf '\n# GlouOS: fewer accidental lockouts\ndeny = 5\nunlock_time = 60\n' \
+        >> /etc/security/faillock.conf
+fi
+
 if [ -f /etc/default/cpupower ]; then
     sed -i 's/^#governor=.*/governor="performance"/' /etc/default/cpupower || true
     systemctl enable cpupower.service 2>/dev/null || true
@@ -35,17 +41,19 @@ compression-algorithm = zstd
 EOF
 
 if [ -f /etc/default/grub ]; then
-    sed -i 's|^GRUB_CMDLINE_LINUX_DEFAULT=.*|GRUB_CMDLINE_LINUX_DEFAULT="quiet splash loglevel=3 nowatchdog split_lock_detect=off threadirqs amd_pstate=active"|' /etc/default/grub
+    sed -i 's|^GRUB_CMDLINE_LINUX_DEFAULT=.*|GRUB_CMDLINE_LINUX_DEFAULT="quiet splash loglevel=0 nowatchdog split_lock_detect=off threadirqs amd_pstate=active"|' /etc/default/grub
 fi
 
-if [ -f /etc/default/scx ]; then
-    sed -i 's/^SCX_SCHEDULER=.*/SCX_SCHEDULER=scx_lavd/' /etc/default/scx
-else
-    echo 'SCX_SCHEDULER=scx_lavd' > /etc/default/scx
-fi
-systemctl enable scx.service 2>/dev/null || true
+# scx-tools >= 1.1 replaced scx.service//etc/default/scx with scx_loader;
+# its config ships as /etc/scx_loader.toml in glouos-base.
+systemctl enable scx_loader.service 2>/dev/null || true
 systemctl enable openrgb.service 2>/dev/null || true
 systemctl enable ananicy-cpp.service 2>/dev/null || true
+systemctl enable power-profiles-daemon.service 2>/dev/null || true
+systemctl enable switcheroo-control.service 2>/dev/null || true
+# Weekly package-cache trim (pacman-contrib) - an unpruned cache plus btrfs
+# snapshots can fill the disk, which breaks desktop login.
+systemctl enable paccache.timer 2>/dev/null || true
 
 for f in /etc/mkinitcpio.conf /etc/mkinitcpio.conf.d/*.conf; do
     [ -f "$f" ] || continue

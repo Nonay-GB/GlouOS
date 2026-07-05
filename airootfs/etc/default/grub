@@ -9,3 +9,5 @@ GRUB_CMDLINE_LINUX=""
 GRUB_GFXMODE=auto
 GRUB_GFXPAYLOAD_LINUX=keep
 GRUB_DISABLE_RECOVERY=true
+# show other installed systems (e.g. Windows Boot Manager) in the menu
+GRUB_DISABLE_OS_PROBER=false
