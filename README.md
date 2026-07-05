@@ -181,29 +181,6 @@ you ship to existing users as updates (see `packages/glouos-base/README.md`).
 - **Always-installed packages (from repos):** edit `packages.x86_64`.
 - **Distro branding:** edit `airootfs/etc/os-release` and the bootloader titles.
 
-## Roadmap ideas
-
-- [x] Light, minimalist theme across desktop, login and installer
-- [x] Minimalist 5-step installer (Settings, Packages, Drivers, Install, Welcome)
-- [x] Packages + GPU drivers chosen during install (slim ISO)
-- [x] Double-click `.exe`/`.msi` -> runs via Wine
-- [x] Windows-like defaults (double-click, window buttons, snapping)
-- [x] GUI update system with background detection ([docs/UPDATES.md](docs/UPDATES.md))
-- [x] Light, branded Plymouth boot splash (live + installed)
-- [x] Authenticity model: signed ISO + signed packages ([docs/AUTHENTICITY.md](docs/AUTHENTICITY.md))
-- [x] Signing toolchain: key gen, `glouos-keyring` package, repo/ISO signing ([tools/](tools/))
-- [x] Secure Boot Setup app (sbctl, Windows-styled wizard) for verified boot
-- [x] GlouOS files packaged as `glouos-base` so updates reach existing installs ([packages/glouos-base/](packages/glouos-base/))
-- [x] "GlouOS Settings": real Windows-style settings app with working panels
-  (network/bluetooth/apps/time/gaming/security/updates via nmcli, bluetoothctl,
-  pacman, timedatectl, cpupower, sbctl, ...)
-- [ ] Deepen panels further (per-display layout, full language packs, user mgmt)
-- [ ] Generate the real signing key and stand up the hosted `[glouos]` repo
-- [ ] Replace the **placeholder logo and slides** with real artwork
-- [ ] Captured pixel-faithful Windows-like Plasma layout in `etc/skel`
-- [ ] Optional "Game Mode" boot target (gamescope + Steam Big Picture)
-- [ ] Proton (instead of plain Wine) for the `.exe` handler via umu-launcher
-
 ---
 
 ## Important notes / honesty
