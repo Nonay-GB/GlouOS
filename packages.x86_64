@@ -13,6 +13,7 @@ nano
 btrfs-progs
 snapper
 snap-pac
+btrfs-assistant
 grub-btrfs
 dosfstools
 e2fsprogs
@@ -20,6 +21,9 @@ exfatprogs
 f2fs-tools
 ntfs-3g
 gptfdisk
+zip
+unzip
+fuse2
 parted
 squashfs-tools
 rsync
@@ -42,7 +46,10 @@ pipewire
 lib32-pipewire
 pipewire-alsa
 pipewire-pulse
+libpulse
+lib32-libpulse
 wireplumber
+pavucontrol
 
 mesa
 lib32-mesa
@@ -56,6 +63,7 @@ kdeplasma-addons
 powerdevil
 kscreen
 bluedevil
+xdg-desktop-portal
 xdg-desktop-portal-kde
 sddm
 konsole
